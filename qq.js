@@ -248,12 +248,14 @@ function fastIntoLoation() {
 }
 
 function work() {
-  while (!include("添加", "可能想认识的人")) {
+  while (1) {
+    if (include("添加", "可能想认识的人") && !include("查看更多")) {
+      slog("已经进入页面");
+      break;
+    }
     sleep(1500);
     slog("请手动进入，可能想认识的人，页面");
   }
-
-  slog("已经进入页面");
 
   fastIntoLoation();
   slog(Config);
