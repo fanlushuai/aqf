@@ -249,7 +249,7 @@ function fastIntoLoation() {
 
 function work() {
   while (1) {
-    if (include("添加", "可能想认识的人") && !include("查看更多")) {
+    if (include("添加", "可能想认识的人") && !include("找人", "找群")) {
       slog("已经进入页面");
       break;
     }
