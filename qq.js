@@ -247,21 +247,44 @@ function fastIntoLoation() {
   }
 }
 
-function work() {
+function inInitPage() {
+  let hasLog = false;
   while (1) {
-    if (include("添加", "可能想认识的人") && !include("找人", "找群")) {
-      slog("已经进入页面");
-      break;
+    let e = text("可能想认识的人").findOnce();
+    // 只有，处于中间位置的，可能想认识的人，才能标题，为可能想认识的人的页面
+
+    if (
+      e &&
+      e.bounds().right > W / 2 &&
+      !include("找人", "找群") &&
+      !include("群聊")
+    ) {
+      if (hasLog) {
+        slog("已经入页面");
+      }
+      return true;
+      // log(e.bounds());
+    } else {
+      if (!hasLog) {
+        hasLog = true;
+        slog("等待手动切换到初始QQ界面");
+      }
     }
-    sleep(1500);
-    slog("请手动进入，可能想认识的人，页面");
+
+    sleep(500);
   }
+}
+
+function work() {
+  inInitPage();
+  sleep(1500);
 
   fastIntoLoation();
   slog(Config);
 
   let i = 0;
   while (1) {
+    inInitPage();
     if (addOnePeople()) {
       slog("休息" + (Config.stepSec || 1) + "秒");
       sleep((Config.stepSec || 1) * 1000);
