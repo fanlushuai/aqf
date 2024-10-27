@@ -86,6 +86,73 @@ function findOneInPage(selector) {
     .visibleToUser()
     .findOnce();
 }
+let includeArr = [];
+let excludeArr = [];
+
+function initTagRule(keys) {
+  let postionArr = [];
+
+  for (let i = 0; i < keys.length; i++) {
+    console.log(keys[i]); // 输出每个字符
+    let char = keys[i];
+    if (char == "+") {
+      postionArr.push(i);
+    } else if (char == "-") {
+      postionArr.push(i);
+    }
+  }
+
+  //   log(postionArr);
+
+  for (let i = 0; i < postionArr.length; i++) {
+    let keywords = keys.substring(postionArr[i], postionArr[i + 1]).trim();
+    // log("关键字:" + keywords);
+    if (keywords.startsWith("+")) {
+      keywords = keywords.substring(1);
+      //   log("包含 关键字:" + keywords);
+      includeArr.push(keywords);
+    } else if (keywords.startsWith("-")) {
+      keywords = keywords.substring(1);
+      //   log("排除 关键字:" + keywords);
+      excludeArr.push(keywords);
+    }
+  }
+}
+
+initTagRule(Config.tagRule);
+
+function tagFittler(textArr) {
+  function inOk() {
+    if (includeArr.length == 0) {
+      return true;
+    }
+
+    for (let t of textArr) {
+      for (let tt of includeArr) {
+        if (t.includes(tt)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function exOk() {
+    if (excludeArr.length == 0) {
+      return true;
+    }
+    for (let t of textArr) {
+      for (let tt of excludeArr) {
+        if (t.includes(tt)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  return inOk() && exOk();
+}
 
 function addOnePeople() {
   slog("添加一个好友");
@@ -105,6 +172,22 @@ function addOnePeople() {
   slog("即将处理：" + nickName);
 
   let e = nickNameEle.parent().parent().findOne(text("添加"));
+
+  let allTexts = nickNameEle.parent().parent().find(className("TextView"));
+
+  let allText = [];
+  for (let t of allTexts) {
+    if (t.id() != "nickname") {
+      allText.push(t.text());
+    }
+  }
+
+  if (!tagFittler(allText)) {
+    slog("不符合标签规则，跳过");
+    jumpNickName(nickName);
+    return;
+  }
+
   if (e == null) {
     slog("没有添加按钮，跳过");
     jumpNickName(nickName);
@@ -234,6 +317,8 @@ function fastIntoLoation() {
     return;
   } else {
     // 可能死循环
+    inInitPage();
+
     slog("翻页");
 
     if (text("没有更多了").findOnce() != null) {

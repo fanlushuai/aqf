@@ -35,6 +35,12 @@
                         <input id="maxAddCount" text='10' textSize="14sp" color="black" paddingLeft="5" ems="3" inputType="number" gravity="center" layout_weight="1" />
                         <text text="（好友）" textSize="14sp" textColor="black" w="auto" textStyle="bold" layout_weight="1.8" />
                     </linear>
+                    <linear>
+                        <text text="标签" textSize="12sp" textColor="black" w="auto" textStyle="bold" layout_weight="0.2" />
+                    </linear>
+                    <linear>
+                        <input id="tagRule" hint='+A-B' textSize="14sp" color="black" paddingLeft="5" ems="3" gravity="center" layout_weight="1" />
+                    </linear>
                 </vertical>
                 <View bg="#4EBFDD" h="*" w="5" />
             </card>
